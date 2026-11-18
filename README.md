@@ -49,3 +49,9 @@ scripts/        migrar, seed, criar-admin e exportar
 docs/           inventário exportado e guia da apresentação
 referencia/     protótipo visual original (arquivo único)
 ```
+
+## Direitos autorais
+
+© 2026 Gustavo Fiedler Calegari. Todos os direitos reservados.
+
+Este código está publicado apenas para avaliação de portfólio. Não é permitido copiar, modificar, distribuir ou usar comercialmente, no todo ou em parte, sem autorização por escrito do autor.
