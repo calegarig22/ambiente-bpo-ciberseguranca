@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ambiente da BPO financeira</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=DM+Sans:wght@400;500&display=swap">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f4f5f7;--surf:#ffffff;--ink:#101828;--mute:#5b6577;--line:#e1e4ea;--line2:#b4bbc8;--acc:#4f3fd9;
+  --tl:92%;--tt:26%;--tline:74%;
+  --ok:#1f8a4c;--okbg:#dff3e6;--okink:#14532d;
+  --at:#c27a0a;--atbg:#fdf0d2;--atink:#6b4204;
+  --pe:#c93a3a;--pebg:#fbe0df;--peink:#7f1d1d;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1116;--surf:#171b22;--ink:#e8ebf1;--mute:#98a1b2;--line:#262c37;--line2:#434c5c;--acc:#9d93ff;
+    --tl:20%;--tt:82%;--tline:38%;
+    --ok:#4cc27a;--okbg:#14301f;--okink:#a7e9c1;
+    --at:#e5a43b;--atbg:#3a2b0f;--atink:#f4d08a;
+    --pe:#ef6b6b;--pebg:#3b1717;--peink:#f7b4b4;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1116;--surf:#171b22;--ink:#e8ebf1;--mute:#98a1b2;--line:#262c37;--line2:#434c5c;--acc:#9d93ff;
+  --tl:20%;--tt:82%;--tline:38%;
+  --ok:#4cc27a;--okbg:#14301f;--okink:#a7e9c1;
+  --at:#e5a43b;--atbg:#3a2b0f;--atink:#f4d08a;
+  --pe:#ef6b6b;--pebg:#3b1717;--peink:#f7b4b4;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 'DM Sans',system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+h1,h2,h3{font-family:'Sora','DM Sans',system-ui,sans-serif;margin:0;font-weight:600;letter-spacing:-.015em}
+h1{font-size:clamp(26px,4vw,36px);line-height:1.15}
+h2{font-size:19px}
+h3{font-size:16px}
+.app{max-width:1320px;margin:0 auto;padding:20px 16px 56px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px}
+.side{position:sticky;top:16px;align-self:start;display:flex;flex-direction:column;gap:6px}
+.brand{font-family:'Sora',sans-serif;font-weight:600;font-size:15px;line-height:1.3;margin-bottom:10px}
+.brand span{display:block;font-family:'DM Sans',sans-serif;font-weight:400;font-size:13px;color:var(--mute);margin-top:2px}
+.nv{display:flex;align-items:center;justify-content:space-between;gap:8px;background:transparent;border:1px solid transparent;border-radius:10px;padding:9px 12px;text-align:left}
+.nv:hover{background:var(--surf)}
+.nv[aria-current="page"]{background:var(--surf);border-color:var(--line2);font-weight:500}
+.nv small{color:var(--mute);font-size:12.5px;white-space:nowrap}
+.side .btn{margin-top:14px}
+.btn{background:var(--ink);color:var(--surf);border:0;border-radius:8px;padding:8px 14px;font-weight:500}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line2)}
+.btn.sm{padding:5px 10px;font-size:13.5px}
+.btn.danger{background:transparent;color:var(--pe);border:1px solid var(--pe)}
+.mute{color:var(--mute)}
+.lead{margin:6px 0 20px;color:var(--mute);max-width:64ch}
+.chip{display:inline-block;font-size:12.5px;line-height:1.5;padding:1px 9px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}
+.ta{border-color:hsl(var(--h) 35% var(--tline));background:hsl(var(--h) 38% var(--tl));color:hsl(var(--h) 55% var(--tt))}
+.es{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;line-height:1.5;padding:1px 9px;border-radius:999px;white-space:nowrap}
+.es::before{content:'';width:8px;height:8px;border-radius:50%;background:currentColor}
+.e-ok{background:var(--okbg);color:var(--okink)}
+.e-atencao{background:var(--atbg);color:var(--atink)}
+.e-pendente{background:var(--pebg);color:var(--peink)}
+.dot{flex:none;width:11px;height:11px;border-radius:50%;margin-top:5px}
+.d-ok{background:var(--ok)}.d-atencao{background:var(--at)}.d-pendente{background:var(--pe)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:28px}
+.tile{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:10px}
+.tile:hover{border-color:var(--line2)}
+.tile b{font-family:'Sora',sans-serif;font-size:22px;font-weight:600}
+.tile .d{color:var(--mute);font-size:13.5px;margin-top:-6px}
+.bar{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--line)}
+.bar i{display:block}
+.cnts{display:flex;gap:6px;flex-wrap:wrap}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+.box{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px}
+.box h2{margin-bottom:10px;display:flex;gap:10px;align-items:center}
+.li{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:8px 0}
+.li:first-of-type{border-top:0}
+.li:hover .ln{text-decoration:underline}
+.ln{flex:1;min-width:0}
+.mwrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th{text-align:left;font-weight:500;color:var(--mute);font-size:13.5px;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+td button{background:none;border:0;padding:0;text-align:left;font-weight:500}
+td button:hover{text-decoration:underline}
+.ahead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:20px;align-items:start}
+.nd{position:relative}
+.kids{margin-left:15px;padding-left:19px}
+.kids>.nd::before{content:'';position:absolute;left:-19px;top:0;bottom:0;border-left:1.5px solid var(--line2)}
+.kids>.nd:last-child::before{bottom:auto;height:25px}
+.kids>.nd::after{content:'';position:absolute;left:-19px;top:25px;width:15px;border-top:1.5px solid var(--line2)}
+.rw{display:flex;align-items:flex-start;gap:6px;margin:4px 0}
+.tg{flex:none;width:26px;height:26px;margin-top:10px;border:1px solid var(--line2);border-radius:6px;background:var(--surf);line-height:1;color:var(--mute);padding:0}
+.sp{flex:none;width:26px}
+.rb{flex:1;min-width:0;display:flex;gap:10px;align-items:flex-start;text-align:left;background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+.rb:hover{border-color:var(--line2)}
+.rw.sel .rb{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.nd.d0>.rw .rb{border-left:4px solid var(--acc)}
+.rt{flex:1;min-width:0;display:flex;flex-direction:column}
+.rn{font-weight:500}
+.nd.d0>.rw .rn{font-family:'Sora',sans-serif;font-weight:600}
+.rd{color:var(--mute);font-size:13.5px;line-height:1.35}
+.rm{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+.rm small{color:var(--mute);font-size:12.5px}
+.det{position:sticky;top:16px}
+.det .box{display:flex;flex-direction:column;gap:12px}
+.dh{display:flex;gap:6px;flex-wrap:wrap}
+.f{display:flex;flex-direction:column;gap:4px}
+.f label,.lab{font-size:13.5px;color:var(--mute)}
+input,select,textarea{background:var(--surf);border:1px solid var(--line2);border-radius:8px;padding:8px 10px;min-width:0;width:100%}
+textarea{resize:vertical;min-height:60px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.seg button{border:1px solid var(--line2);background:var(--surf);border-radius:8px;padding:7px 4px;font-size:13.5px}
+.seg button[aria-pressed="true"]{font-weight:500}
+.seg button[aria-pressed="true"].e-ok{background:var(--okbg);color:var(--okink);border-color:var(--ok)}
+.seg button[aria-pressed="true"].e-atencao{background:var(--atbg);color:var(--atink);border-color:var(--at)}
+.seg button[aria-pressed="true"].e-pendente{background:var(--pebg);color:var(--peink);border-color:var(--pe)}
+.seg button::before{display:none}
+.shot{border:1.5px dashed var(--line2);border-radius:10px;padding:14px;text-align:center;color:var(--mute);font-size:13.5px;display:flex;flex-direction:column;gap:10px;align-items:center}
+.shotimg{width:100%;border-radius:8px;border:1px solid var(--line);display:block}
+label.btn{display:inline-block;cursor:pointer}
+.lk{display:flex;gap:8px;align-items:center;width:100%;text-align:left;background:none;border:0;padding:4px 0}
+.lk:hover .ln{text-decoration:underline}
+details.add{margin-top:16px}
+details.add summary{cursor:pointer;font-weight:500;padding:10px 0}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin-top:6px}
+.err{min-height:20px;font-size:13.5px;color:var(--pe);margin-top:6px}
+.err.good{color:var(--ok)}
+.note{margin-top:28px;color:var(--mute);font-size:13.5px;max-width:72ch}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:1100px){.cols{grid-template-columns:1fr}.det{position:static}}
+@media (max-width:900px){
+  .app{grid-template-columns:1fr;gap:16px}
+  .side{position:static;flex-direction:row;flex-wrap:wrap;gap:6px}
+  .brand{width:100%;margin-bottom:2px}
+  .side .btn{margin-top:0}
+  .nv small{display:none}
+  .cols2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="side" id="side" aria-label="Áreas"></nav>
+  <main id="main"></main>
+</div>
+<script>
+(function(){
+var KEY='ambiente-bpo-v2';
+var AREAS=['GRC','IAM','Network','Endpoint','SOC'];
+var HUE={GRC:265,IAM:175,Network:215,Endpoint:22,SOC:340};
+var ADESC={GRC:'Governança, riscos e conformidade',IAM:'Identidades e acessos',Network:'Rede e perímetro',Endpoint:'Estações, e-mail e correções',SOC:'Monitoramento e resposta'};
+var TIPO={sistema:'Sistema',config:'Configuração',regra:'Regra'};
+var EST={ok:'Em ordem',atencao:'Atenção',pendente:'Pendente'};
+var ESTK=['ok','atencao','pendente'];
+var SEED=[
+['g1','GRC','sistema','Plataforma de GRC','Registro de riscos, políticas e auditorias','ok','','ServiceNow GRC','ServiceNow','2024'],
+['g2','GRC','config','Matriz de riscos 5x5','Probabilidade vezes impacto, revisão trimestral','ok','g1','','',''],
+['g3','GRC','regra','Risco alto exige plano de tratamento em 30 dias','','ok','g2','','',''],
+['g4','GRC','regra','Exceção de política exige aprovação do comitê','','atencao','g2','','',''],
+['g5','GRC','sistema','Plataforma de treinamento','Treinamentos obrigatórios e simulações de phishing','ok','','KnowBe4','KnowBe4','SaaS'],
+['g6','GRC','config','Trilha obrigatória de segurança','No onboarding e a cada 12 meses para todos','ok','g5','','',''],
+['g7','GRC','regra','Treinamento vencido bloqueia acesso a dados de clientes','','pendente','g6','','',''],
+['g8','GRC','config','Simulação de phishing mensal','Meta de cliques abaixo de 5 por cento','atencao','g5','','',''],
+['g9','GRC','sistema','Repositório de políticas','Versões vigentes e aceite dos colaboradores','ok','','SharePoint','Microsoft','Online'],
+['g10','GRC','config','Ciclo de revisão anual','Toda política revisada a cada 12 meses','atencao','g9','','',''],
+['g11','GRC','regra','Política sem revisão em 12 meses vira pendência automática','','pendente','g10','','',''],
+['g12','GRC','sistema','Gestão de fornecedores','Avaliação de segurança de terceiros','atencao','','Questionário em planilha','Interno','v1'],
+['g13','GRC','config','Questionário de due diligence','Aplicado antes da contratação e renovado a cada ano','pendente','g12','','',''],
+['g14','GRC','regra','Fornecedor crítico precisa de cláusula de LGPD no contrato','','atencao','g13','','',''],
+['i1','IAM','sistema','Provedor de identidade com SSO','Login único para todos os sistemas','ok','','Microsoft Entra ID','Microsoft','P1'],
+['i2','IAM','config','MFA obrigatório','App autenticador ou chave FIDO2, sem SMS','ok','i1','','',''],
+['i3','IAM','regra','ERP e banco só acessam com MFA','','ok','i2','','',''],
+['i4','IAM','regra','Login fora do Brasil é bloqueado','','atencao','i2','','',''],
+['i5','IAM','config','Acesso condicional','Dispositivo gerenciado exigido para dados financeiros','ok','i1','','',''],
+['i6','IAM','sistema','Cofre de acessos privilegiados','Senhas de administradores e contas de serviço','atencao','','CyberArk','CyberArk','14'],
+['i7','IAM','config','Rotação automática de senhas','Troca a cada 30 dias e após cada uso','atencao','i6','','',''],
+['i8','IAM','regra','Administrador só acessa com sessão gravada','','pendente','i7','','',''],
+['i9','IAM','sistema','Ciclo de vida de contas','Criação e desligamento de acessos a partir do RH','ok','','Entra ID Governance','Microsoft','SaaS'],
+['i10','IAM','config','Integração com o sistema de RH','Admissão e desligamento disparam criação e remoção','ok','i9','','',''],
+['i11','IAM','regra','Conta de desligado é desativada em até 1 hora','','atencao','i10','','',''],
+['i12','IAM','regra','Conta sem uso por 90 dias é desativada','','pendente','i10','','',''],
+['i13','IAM','config','Revisão semestral de acessos','Gestores recertificam o acesso de cada equipe','pendente','i9','','',''],
+['i14','IAM','regra','Acesso conforme o perfil da função, sem acúmulo','','ok','i13','','',''],
+['n1','Network','sistema','Firewall de borda','Controle de entrada e saída da rede','ok','','FortiGate','Fortinet','FortiOS 7.4'],
+['n2','Network','config','Zona do financeiro','Rede isolada para ERP, folha e conciliação','ok','n1','','',''],
+['n3','Network','regra','Só HTTPS chega ao ERP','','ok','n2','','',''],
+['n4','Network','regra','Zonas não se comunicam sem regra explícita','','ok','n2','','',''],
+['n5','Network','config','Inspeção de tráfego (IPS)','Assinaturas atualizadas diariamente','atencao','n1','','',''],
+['n6','Network','sistema','VPN corporativa','Acesso remoto de colaboradores','ok','','FortiClient VPN','Fortinet','7.2'],
+['n7','Network','config','Túnel com autenticação forte','Certificado do dispositivo mais MFA','ok','n6','','',''],
+['n8','Network','regra','Sem VPN, sem acesso aos sistemas internos','','ok','n7','','',''],
+['n9','Network','sistema','Switches e Wi-Fi','Rede local dos escritórios','atencao','','Meraki','Cisco','MR 30'],
+['n10','Network','config','Wi-Fi de visitantes separado','Rede isolada, sem rota para a rede interna','ok','n9','','',''],
+['n11','Network','regra','Visitante nunca alcança a rede corporativa','','ok','n10','','',''],
+['n12','Network','sistema','DNS e proxy web','Filtro de navegação e resolução de nomes','pendente','','Umbrella','Cisco','SaaS'],
+['n13','Network','config','Bloqueio de categorias de risco','Phishing, malware e apostas','pendente','n12','','',''],
+['n14','Network','regra','Download de executáveis é bloqueado','','pendente','n13','','',''],
+['e1','Endpoint','sistema','Proteção das estações (EDR)','Detecta e contém ameaças nos computadores','ok','','Falcon','CrowdStrike','Sensor 7'],
+['e2','Endpoint','config','Modo de prevenção ativo','Bloqueia, e não só alerta','ok','e1','','',''],
+['e3','Endpoint','regra','Máquina infectada é isolada automaticamente','','atencao','e2','','',''],
+['e4','Endpoint','sistema','Gestão de dispositivos (MDM)','Inventário e política dos notebooks','atencao','','Intune','Microsoft','SaaS'],
+['e5','Endpoint','config','Criptografia de disco','BitLocker em todos os notebooks','atencao','e4','','',''],
+['e6','Endpoint','regra','Notebook sem criptografia não acessa dados financeiros','','pendente','e5','','',''],
+['e7','Endpoint','config','Bloqueio de tela','Após 5 minutos de inatividade','ok','e4','','',''],
+['e8','Endpoint','sistema','Gestão de correções','Atualização de sistema e aplicativos','atencao','','WSUS e Intune','Microsoft','Windows Server'],
+['e9','Endpoint','config','Janela de atualização semanal','Correções críticas em até 7 dias','atencao','e8','','',''],
+['e10','Endpoint','regra','Vulnerabilidade crítica é corrigida em 7 dias','','pendente','e9','','',''],
+['e11','Endpoint','sistema','Segurança de e-mail','Filtro contra phishing e anexos maliciosos','ok','','Defender for Office 365','Microsoft','Plano 2'],
+['e12','Endpoint','config','Análise de anexos em ambiente isolado','Anexos desconhecidos abrem em área separada','ok','e11','','',''],
+['e13','Endpoint','regra','Anexo com macro é bloqueado','','ok','e12','','',''],
+['e14','Endpoint','config','Proteção contra falsificação de domínio','SPF, DKIM e DMARC configurados','atencao','e11','','',''],
+['e15','Endpoint','regra','E-mail que falha no DMARC é rejeitado','','atencao','e14','','',''],
+['s1','SOC','sistema','SIEM','Reúne e correlaciona os logs do ambiente','atencao','','Enterprise Security','Splunk','9'],
+['s2','SOC','config','Fontes de log conectadas','Firewall, EDR, identidade e e-mail','atencao','s1','','',''],
+['s3','SOC','regra','Logs ficam retidos por 12 meses','','ok','s2','','',''],
+['s4','SOC','config','Regras de detecção','Login anômalo, movimento lateral e exfiltração','atencao','s1','','',''],
+['s5','SOC','regra','Login impossível (dois países em 1 hora) gera alerta alto','','pendente','s4','','',''],
+['s6','SOC','sistema','Plataforma de resposta (SOAR)','Automatiza a resposta aos alertas','pendente','','Splunk SOAR','Splunk','6'],
+['s7','SOC','config','Playbook de phishing','Isola o e-mail, reinicia a senha e abre chamado','pendente','s6','','',''],
+['s8','SOC','regra','Alerta crítico é tratado em até 15 minutos','','pendente','s7','','',''],
+['s9','SOC','sistema','Gestão de incidentes','Registro e acompanhamento dos incidentes','ok','','Jira Service Management','Atlassian','Cloud'],
+['s10','SOC','config','Classificação de severidade','Quatro níveis, com prazo de resposta por nível','ok','s9','','',''],
+['s11','SOC','regra','Incidente grave aciona o comitê em até 1 hora','','atencao','s10','','',''],
+['s12','SOC','sistema','Varredura de vulnerabilidades','Descoberta de falhas em servidores e estações','ok','','Nessus','Tenable','10'],
+['s13','SOC','config','Varredura semanal autenticada','Todos os servidores e uma amostra das estações','ok','s12','','',''],
+['s14','SOC','regra','Falha crítica sem correção vira incidente','','atencao','s13','','','']
+];
+var S=load();
+var ui={view:'geral',sel:null,col:{}};
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function seed(){return {items:SEED.map(function(r){return {id:r[0],area:r[1],tipo:r[2],nome:r[3],det:r[4],estado:r[5],pai:r[6],fer:r[7],forn:r[8],ver:r[9]};})};}
+function load(){try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);if(o&&Array.isArray(o.items))return o;}}catch(e){}return seed();}
+function save(){
+  try{localStorage.setItem(KEY,JSON.stringify(S));}
+  catch(e){try{localStorage.setItem(KEY,JSON.stringify({items:S.items.map(function(i){var c=Object.assign({},i);delete c.img;return c;})}));}catch(e2){}}
+}
+function byId(id){return S.items.find(function(i){return i.id===id;});}
+function kidsOf(id){return S.items.filter(function(i){return i.pai===id;});}
+function aChip(a){return '<span class="chip ta" style="--h:'+HUE[a]+'">'+a+'</span>';}
+function eChip(e){return '<span class="es e-'+e+'">'+EST[e]+'</span>';}
+function count(list,e){return list.filter(function(i){return i.estado===e;}).length;}
+function bar(list){var n=list.length||1;return '<div class="bar" role="img" aria-label="'+count(list,'ok')+' em ordem, '+count(list,'atencao')+' em atenção, '+count(list,'pendente')+' pendentes">'+ESTK.map(function(e){var c=count(list,e);return c?'<i style="width:'+(c/n*100)+'%;background:var(--'+(e==='ok'?'ok':e==='atencao'?'at':'pe')+')"></i>':'';}).join('')+'</div>';}
+function cnts(list){return '<div class="cnts">'+ESTK.map(function(e){return '<span class="es e-'+e+'">'+count(list,e)+' '+EST[e].toLowerCase()+'</span>';}).join('')+'</div>';}
+function li(i){return '<button class="li" data-act="open" data-id="'+i.id+'">'+aChip(i.area)+'<span class="ln">'+esc(i.nome)+'</span><span class="chip">'+TIPO[i.tipo]+'</span></button>';}
+
+function nav(){
+  var h='<div class="brand">Ambiente da BPO financeira<span>Exemplo fictício</span></div>';
+  h+='<button class="nv" data-go="geral"'+(ui.view==='geral'?' aria-current="page"':'')+'>Visão geral</button>';
+  AREAS.forEach(function(a){
+    var l=S.items.filter(function(i){return i.area===a;});
+    var open=l.length-count(l,'ok');
+    h+='<button class="nv" data-go="'+a+'"'+(ui.view===a?' aria-current="page"':'')+'><span>'+a+'</span><small>'+open+' em aberto</small></button>';
+  });
+  h+='<button class="btn ghost sm" data-act="reset">Restaurar exemplo</button>';
+  document.getElementById('side').innerHTML=h;
+}
+
+function vGeral(){
+  var h='<h1>Visão geral do ambiente</h1><p class="lead">'+S.items.length+' itens em 5 áreas. Cada área tem sistemas, as configurações deles e as regras que valem por causa dessas configurações.</p>';
+  h+='<div class="tiles">'+AREAS.map(function(a){
+    var l=S.items.filter(function(i){return i.area===a;});
+    var sis=l.filter(function(i){return i.tipo==='sistema';}).length;
+    return '<button class="tile" data-go="'+a+'"><b>'+a+'</b><span class="d">'+ADESC[a]+'</span>'+bar(l)+'<span class="mute" style="font-size:13.5px">'+sis+' sistemas, '+l.length+' itens</span>'+cnts(l)+'</button>';
+  }).join('')+'</div>';
+  var pen=S.items.filter(function(i){return i.estado==='pendente';});
+  var ate=S.items.filter(function(i){return i.estado==='atencao';});
+  function lst(l){return l.length?l.slice(0,8).map(li).join('')+(l.length>8?'<p class="mute" style="margin:8px 0 0;font-size:13.5px">Mostrando 8 de '+l.length+'. O restante está na árvore de cada área.</p>':''):'<p class="mute" style="margin:0">Nada por aqui.</p>';}
+  h+='<div class="cols2"><div class="box"><h2>Pendentes <span class="es e-pendente">'+pen.length+'</span></h2>'+lst(pen)+'</div><div class="box"><h2>Em atenção <span class="es e-atencao">'+ate.length+'</span></h2>'+lst(ate)+'</div></div>';
+  var sis=S.items.filter(function(i){return i.tipo==='sistema';});
+  h+='<div class="box"><h2>Inventário de sistemas</h2><div class="mwrap"><table><thead><tr><th>Área</th><th>Sistema</th><th>Ferramenta</th><th>Fornecedor</th><th>Versão</th><th>Estado</th></tr></thead><tbody>'+sis.map(function(i){
+    return '<tr><td>'+aChip(i.area)+'</td><td><button data-act="open" data-id="'+i.id+'">'+esc(i.nome)+'</button></td><td>'+esc(i.fer)+'</td><td>'+esc(i.forn)+'</td><td>'+esc(i.ver)+'</td><td>'+eChip(i.estado)+'</td></tr>';
+  }).join('')+'</tbody></table></div></div>';
+  return h;
+}
+
+function rowHtml(i,nk,collapsed){
+  var tg=nk?'<button class="tg" data-act="tog" data-id="'+i.id+'" aria-expanded="'+(!collapsed)+'" aria-label="'+(collapsed?'Expandir':'Recolher')+' '+esc(i.nome)+'">'+(collapsed?'+':'-')+'</button>':'<span class="sp"></span>';
+  var meta=i.tipo==='sistema'?(i.fer?'<small>'+esc(i.fer)+(i.ver?' '+esc(i.ver):'')+'</small>':''):'<small>'+TIPO[i.tipo]+'</small>';
+  return '<div class="rw'+(ui.sel===i.id?' sel':'')+'">'+tg+'<button class="rb" data-act="sel" data-id="'+i.id+'"><span class="dot d-'+i.estado+'"></span><span class="rt"><span class="rn">'+esc(i.nome)+'</span>'+(i.det?'<span class="rd">'+esc(i.det)+'</span>':'')+'</span><span class="rm">'+eChip(i.estado)+meta+(i.img?'<small>com print</small>':'')+'</span></button></div>';
+}
+function treeHtml(a){
+  var its=S.items.filter(function(i){return i.area===a;});
+  var ids={};its.forEach(function(i){ids[i.id]=1;});
+  var roots=its.filter(function(i){return !i.pai||!ids[i.pai];});
+  function node(i,d){
+    var ch=its.filter(function(c){return c.pai===i.id;});
+    var col=!!ui.col[i.id];
+    return '<div class="nd d'+Math.min(d,2)+'">'+rowHtml(i,ch.length,col)+(ch.length&&!col?'<div class="kids">'+ch.map(function(c){return node(c,d+1);}).join('')+'</div>':'')+'</div>';
+  }
+  return roots.map(function(r){return node(r,0);}).join('');
+}
+function detailHtml(){
+  var it=ui.sel?byId(ui.sel):null;
+  if(!it)return '<div class="box"><h3>Detalhes</h3><p class="mute" style="margin:0">Selecione um item da árvore para ver ferramenta, estado e anexar um print.</p></div>';
+  var pai=it.pai?byId(it.pai):null,ch=kidsOf(it.id);
+  var dl=it.tipo==='sistema'?'Função':it.tipo==='config'?'Como está configurado':'Observação';
+  var h='<div class="box"><div class="dh">'+aChip(it.area)+'<span class="chip">'+TIPO[it.tipo]+'</span>'+eChip(it.estado)+'</div>';
+  h+='<div class="f"><label for="d-nome">Nome</label><input id="d-nome" value="'+esc(it.nome)+'"></div>';
+  h+='<div class="f"><label for="d-det">'+dl+'</label><textarea id="d-det">'+esc(it.det)+'</textarea></div>';
+  if(it.tipo==='sistema'){
+    h+='<div class="f"><label for="d-fer">Ferramenta</label><input id="d-fer" value="'+esc(it.fer)+'"></div><div class="f"><label for="d-forn">Fornecedor</label><input id="d-forn" value="'+esc(it.forn)+'"></div><div class="f"><label for="d-ver">Versão</label><input id="d-ver" value="'+esc(it.ver)+'"></div>';
+  }
+  h+='<div class="f"><span class="lab">Estado</span><div class="seg">'+ESTK.map(function(e){return '<button class="e-'+e+'" data-act="est" data-v="'+e+'" aria-pressed="'+(it.estado===e)+'">'+EST[e]+'</button>';}).join('')+'</div></div>';
+  if(pai)h+='<div class="f"><span class="lab">Faz parte de</span><button class="lk" data-act="sel" data-id="'+pai.id+'"><span class="chip">'+TIPO[pai.tipo]+'</span><span class="ln">'+esc(pai.nome)+'</span></button></div>';
+  if(ch.length)h+='<div class="f"><span class="lab">Contém</span>'+ch.map(function(c){return '<button class="lk" data-act="sel" data-id="'+c.id+'"><span class="chip">'+TIPO[c.tipo]+'</span><span class="ln">'+esc(c.nome)+'</span></button>';}).join('')+'</div>';
+  h+='<div class="f"><span class="lab">Evidência</span>';
+  if(it.img){h+='<img class="shotimg" src="'+it.img+'" alt="Print anexado a '+esc(it.nome)+'"><div class="acts"><label class="btn ghost sm">Trocar print<input type="file" accept="image/*" id="d-img" hidden></label><button class="btn ghost sm" data-act="rmimg">Remover print</button></div>';}
+  else{h+='<div class="shot">Nenhum print anexado<label class="btn sm">Anexar print<input type="file" accept="image/*" id="d-img" hidden></label></div>';}
+  h+='<div class="err" id="d-err" role="alert"></div></div>';
+  h+='<button class="btn danger sm" data-act="del" data-id="'+it.id+'">Remover item'+(ch.length?' e o que está dentro dele':'')+'</button></div>';
+  return h;
+}
+function vArea(a){
+  var l=S.items.filter(function(i){return i.area===a;});
+  var h='<div class="ahead"><div><h1>'+a+'</h1><p class="lead" style="margin-bottom:10px">'+ADESC[a]+'. '+l.length+' itens.</p>'+cnts(l)+'</div><div class="acts"><button class="btn ghost sm" data-act="colall">Recolher tudo</button><button class="btn ghost sm" data-act="expall">Expandir tudo</button></div></div>';
+  h+='<div class="cols" style="margin-top:16px"><div>'+treeHtml(a)+
+    '<details class="add"><summary>Adicionar item</summary><div class="box"><div class="form"><select id="a-tipo" aria-label="Tipo"><option value="sistema">Sistema</option><option value="config">Configuração</option><option value="regra">Regra</option></select><select id="a-pai" aria-label="Faz parte de"></select><input id="a-nome" placeholder="Nome do item" aria-label="Nome do item"><select id="a-est" aria-label="Estado">'+ESTK.map(function(e){return '<option value="'+e+'">'+EST[e]+'</option>';}).join('')+'</select></div><div class="acts" style="margin-top:10px"><button class="btn sm" data-act="add">Adicionar</button></div><div class="err" id="a-err" role="alert"></div></div></details></div>'+
+    '<div class="det" id="detail">'+detailHtml()+'</div></div>';
+  return h;
+}
+function fillPais(){
+  var t=document.getElementById('a-tipo'),p=document.getElementById('a-pai');if(!t||!p)return;
+  if(t.value==='sistema'){p.innerHTML='<option value="">Sistema novo, sem origem</option>';p.disabled=true;return;}
+  p.disabled=false;
+  var need=t.value==='config'?'sistema':'config';
+  var l=S.items.filter(function(i){return i.area===ui.view&&i.tipo===need;});
+  p.innerHTML=l.length?l.map(function(i){return '<option value="'+i.id+'">'+esc(i.nome)+'</option>';}).join(''):'<option value="">Nenhum item disponível</option>';
+}
+function render(){
+  nav();
+  document.getElementById('main').innerHTML=(ui.view==='geral'?vGeral():vArea(ui.view))+'<p class="note">Ambiente fictício criado para o projeto. Ferramentas, fornecedores e versões são de exemplo. Alterações e prints ficam salvos só neste navegador.</p>';
+  if(ui.view!=='geral')fillPais();
+}
+function msg(id,t,good){var e=document.getElementById(id);if(e){e.textContent=t;e.className='err'+(good?' good':'');}}
+function delTree(id){var ids=[id],q=[id],x;while(q.length){x=q.pop();kidsOf(x).forEach(function(k){ids.push(k.id);q.push(k.id);});}S.items=S.items.filter(function(i){return ids.indexOf(i.id)<0;});}
+function attach(file,it){
+  if(!file)return;
+  var fr=new FileReader();
+  fr.onload=function(){var im=new Image();
+    im.onload=function(){var m=1000,k=Math.min(1,m/Math.max(im.width,im.height));var c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);it.img=c.toDataURL('image/jpeg',0.72);save();render();};
+    im.onerror=function(){msg('d-err','Não foi possível ler essa imagem. Tente um arquivo PNG ou JPG.');};
+    im.src=fr.result;};
+  fr.readAsDataURL(file);
+}
+
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-act],[data-go]');if(!t)return;
+  if(t.dataset.go){ui.view=t.dataset.go;ui.sel=null;render();window.scrollTo(0,0);return;}
+  var a=t.dataset.act,id=t.dataset.id,it=id?byId(id):null;
+  if(a==='open'&&it){ui.view=it.area;ui.sel=id;render();window.scrollTo(0,0);}
+  else if(a==='sel'&&it){ui.sel=id;render();var d=document.getElementById('detail');if(d&&window.innerWidth<=1100)d.scrollIntoView({behavior:'smooth',block:'start'});}
+  else if(a==='tog'){ui.col[id]=!ui.col[id];render();}
+  else if(a==='colall'){S.items.forEach(function(i){if(i.area===ui.view&&kidsOf(i.id).length)ui.col[i.id]=true;});render();}
+  else if(a==='expall'){ui.col={};render();}
+  else if(a==='est'){var s=ui.sel?byId(ui.sel):null;if(s){s.estado=t.dataset.v;save();render();}}
+  else if(a==='del'&&it){delTree(id);ui.sel=null;save();render();}
+  else if(a==='rmimg'){var r=ui.sel?byId(ui.sel):null;if(r){delete r.img;save();render();}}
+  else if(a==='reset'){S=seed();ui.sel=null;ui.col={};save();render();}
+  else if(a==='add'){
+    var nome=document.getElementById('a-nome').value.trim(),tipo=document.getElementById('a-tipo').value,pai=document.getElementById('a-pai').value;
+    if(!nome){msg('a-err','Dê um nome ao item antes de adicionar.');return;}
+    if(tipo!=='sistema'&&!pai){msg('a-err','Escolha a que sistema ou configuração este item pertence.');return;}
+    var n={id:'x'+Date.now().toString(36),area:ui.view,tipo:tipo,nome:nome,det:'',estado:document.getElementById('a-est').value,pai:tipo==='sistema'?'':pai,fer:'',forn:'',ver:''};
+    S.items.push(n);ui.sel=n.id;save();render();
+  }
+});
+document.addEventListener('change',function(e){
+  var id=e.target.id;
+  if(id==='a-tipo'){fillPais();return;}
+  var it=ui.sel?byId(ui.sel):null;if(!it)return;
+  var map={'d-nome':'nome','d-det':'det','d-fer':'fer','d-forn':'forn','d-ver':'ver'};
+  if(map[id]){var v=e.target.value;if(id==='d-nome'&&!v.trim()){render();return;}it[map[id]]=v;save();render();return;}
+  if(id==='d-img'){attach(e.target.files&&e.target.files[0],it);}
+});
+render();
+})();
+</script>
+</body>
+</html>
